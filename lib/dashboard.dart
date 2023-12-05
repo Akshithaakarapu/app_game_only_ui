@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:app_game/all_projects.dart';
+import 'package:app_game/dashboard_ex.dart';
+import 'package:app_game/modals/projuct_madal.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard_page extends StatefulWidget {
@@ -25,6 +29,42 @@ class _Dashboard_pageState extends State<Dashboard_page> {
     '4.5/5',
     '3.9/5',
   ];
+
+  Productsmodel? products_list;
+
+
+void productlist()async{
+  try{
+    Response response = await Dio().get("http://jayanthi10.pythonanywhere.com/api/v1/list_products/");
+   setState(() {
+     products_list = productsmodelFromJson(jsonEncode(response.data));
+   });
+     print("print product list ${response.data}");
+  } catch(e){
+   
+   print(e);
+  }
+}
+
+  // Productsmodel? products;
+  // void getproductsdata() async {
+  //   try {
+  //     Response response = await Dio()
+  //         .get("http://jayanthi10.pythonanywhere.com/api/v1/list_products/");
+  //     print(response.data);
+
+  //     products = productsmodelFromJson(jsonEncode(response.data));
+  //   } catch (e) {
+  //     print("================> Error");
+  //   }
+
+@override
+void initState(){
+  super.initState();
+  productlist();
+  // getproductsdata();
+}
+ 
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,12 +94,12 @@ class _Dashboard_pageState extends State<Dashboard_page> {
                     width: 343,
                     decoration: BoxDecoration(
                       boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromARGB(255, 221, 220, 220),
-                                          blurRadius: 20.0,
-                                          spreadRadius: 0, //New
-                                        )
-                                      ],
+                        BoxShadow(
+                          color: Color.fromARGB(255, 221, 220, 220),
+                          blurRadius: 20.0,
+                          spreadRadius: 0, //New
+                        )
+                          ],
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: Color.fromARGB(255, 213, 212, 212)),
                         color: Color(0xffFFFFFF)
@@ -156,10 +196,13 @@ class _Dashboard_pageState extends State<Dashboard_page> {
                       )
                     ],
                   ),SizedBox(height: 8,),
+                  products_list == null
+                  ?CircularProgressIndicator()
+                  :
                  Container(
                   height: 240,
                     child: GridView.builder(
-                    itemCount: 2,
+                    itemCount: products_list!.data?.length,
                     shrinkWrap: true,           
                     scrollDirection: Axis.vertical,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
@@ -170,95 +213,23 @@ class _Dashboard_pageState extends State<Dashboard_page> {
                             ),
                             physics: BouncingScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
-                     return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                    height: 208,
-                    width: 160,
-                    decoration: BoxDecoration(
-                       boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromARGB(255, 221, 220, 220),
-                                          blurRadius: 20.0,
-                                          spreadRadius: 0, //New
-                                          offset: Offset(8, 5,)
-                                        )
-                                      ],
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(width: 1,color: Color.fromARGB(255, 213, 212, 212)),
-                      color: Color(0xffFFFFFF)
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 10,),
-                        Image.asset(dashboard_img[index],width: 100,height: 85,),
-                        SizedBox(height: 10,),
-                        Text(dashboard_text[index],style: TextStyle(color: Color(0xff000000),fontSize:10,fontWeight: FontWeight.w500)),
-                       SizedBox(height: 12,),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8,right: 8),
-                          child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Image.asset("images/rupee.png"),
-                                     SizedBox(width: 5,),
-                                  Text(dashboars_rupee[index],style: TextStyle(color: Color(0xff121212),fontSize:10,fontWeight: FontWeight.w700)),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Image.asset("images/star.png"),
-                                    SizedBox(width: 5,),
-                                  Text(dashboars_star[index],style: TextStyle(color: Color(0xff000000),fontSize:10,fontWeight: FontWeight.w400)),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      SizedBox(height: 12,),
-                        Container(
-                          width: 85,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Color.fromARGB(255, 238, 237, 237)),
-                            color: Color(0xffFFFFFF)
-                          ),
-                          child: Row(children: [
-                            Image.asset("images/trali.png"),
-                           
-                            Text("Add To Cart",style: TextStyle(color: Color(0xffF63E3E),fontSize:10,fontWeight: FontWeight.w600)),
-                          ]),
-                        )
-                      ],
-                    ),
-                              ),
-                  );
+                    return Dashboard_ex(
+                      dashboard_img: 'http://jayanthi10.pythonanywhere.com/${products_list!.data![index].image}',
+                      dashboard_text: '${products_list!.data![index].description}',
+                      dashboars_rupee: "${products_list!.data![index].productName}",
+                      dashboards_star: '${products_list!.data![index].productId}',
+                    );
                     }
-                ),
-                 
-                    
-              ),
+                    ),  
+                    ),
                     ],
                   ),
-              
                 ]
             ),
-            ),
-            
+            ),     
           ],
         ),
-        
       ),
-      
     );
-    
-  
-  }
-  
+  } 
 }

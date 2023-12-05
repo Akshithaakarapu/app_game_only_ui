@@ -1,5 +1,10 @@
 
+import 'dart:convert';
+
 import 'package:app_game/Gaming_Monitors.dart';
+import 'package:app_game/all_prodcuts_ex.dart';
+import 'package:app_game/modals/projuct_madal.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class All_projects_page extends StatefulWidget {
@@ -42,6 +47,29 @@ class _All_projects_pageState extends State<All_projects_page> {
     '4.6/5',
     '33.4/5',
   ];
+
+   Productsmodel? products_list;
+
+
+void productlist()async{
+  try{
+    Response response = await Dio().get("http://jayanthi10.pythonanywhere.com/api/v1/list_products/");
+   setState(() {
+     products_list = productsmodelFromJson(jsonEncode(response.data));
+   });
+     print("print product list ${response.data}");
+  } catch(e){
+   
+   print(e);
+  }
+}
+
+@override
+void initState(){
+  super.initState();
+  productlist();
+  // getproductsdata();
+}
     int _selectedIndex = 0;
   void _onItemTapped(int index) {
   setState(() {
@@ -70,10 +98,11 @@ class _All_projects_pageState extends State<All_projects_page> {
               padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
               child: Column(
                 children: [
-                     Container(
+                  products_list ==null?CircularProgressIndicator()
+                  : Container(
                           height: 600,
                             child: GridView.builder(
-                            itemCount: dashboard_img.length,
+                            itemCount: products_list!.data!.length,
                             shrinkWrap: true,           
                             scrollDirection: Axis.vertical,
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
@@ -84,86 +113,19 @@ class _All_projects_pageState extends State<All_projects_page> {
                                     ),
                                     physics: BouncingScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
-                             return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                            height: 350,
-                            width: 160,
-                            decoration: BoxDecoration(
-                               boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromARGB(255, 239, 237, 237),
-                                          blurRadius: 20.0,
-                                          spreadRadius: 0, //New
-                                        )
-                                      ],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(width: 1,color: Color.fromARGB(255, 213, 212, 212)),
-                              color: Color(0xffFFFFFF)
-                            ),
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10,),
-                                InkWell(onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) { 
-                                    return Gameimg_monitors_page();
-                                   }));
-                                },
-                                  child: Image.asset(dashboard_img[index],width: 100,height: 85,)),
-                                SizedBox(height: 10,),
-                                Text(dashboard_text[index],style: TextStyle(color: Color(0xff000000),fontSize:10,fontWeight: FontWeight.w500)),
-                               SizedBox(height: 12,),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10,right: 10),
-                                  child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Image.asset("images/rupee.png"),
-                                             SizedBox(width: 5,),
-                                          Text(dashboars_rupee[index],style: TextStyle(color: Color(0xff121212),fontSize:10,fontWeight: FontWeight.w700)),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Image.asset("images/star.png"),
-                                            SizedBox(width: 5,),
-                                          Text(dashboars_star[index],style: TextStyle(color: Color(0xff000000),fontSize:10,fontWeight: FontWeight.w400)),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              SizedBox(height: 16,),
-                                Container(
-                                  width: 89,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: Color(0xffFFFFFF)
-                                  ),
-                                  child: Row(children: [
-                                    Image.asset("images/trali.png"),
-                                    SizedBox(width: 8,),
-                                    Text("Add To Cart",style: TextStyle(color: Color(0xffF63E3E),fontSize:10,fontWeight: FontWeight.w600)),
-                                  ]),
-                                )
-                              ],
-                            ),
-                           ),
-                          );
+                             return All_products_ex(
+                                dashboard_img: 'http://jayanthi10.pythonanywhere.com/${products_list!.data![index].image}',
+                                dashboard_text: '${products_list!.data![index].description}',
+                                dashboars_rupee: "${products_list!.data![index].productName}",
+                                dashboards_star: '${products_list!.data![index].productId}',
+                             );
                             }
                         ),  
                       ),
-                ],
-              ),
-            ),
+                      ],
+                    ),
+                  ),
               BottomNavigationBar(
-      
                   selectedFontSize: 10,
                   // selectedIconTheme: IconThemeData(color: const Color.fromARGB(255, 255, 64, 198), size: 10),
                   selectedItemColor: Color(0xffF63E3E),
@@ -191,10 +153,8 @@ class _All_projects_pageState extends State<All_projects_page> {
                         // selectedItemColor:Color(0xffA456DD),
                         onTap: _onItemTapped,
                       ),
-      
-          
-          ],
-        ),)
+                          ],
+                        ),)
                       );
   }
 }

@@ -85,12 +85,12 @@ class _Gameimg_monitors_pageState extends State<Gameimg_monitors_page> {
                   width: 56,
                   decoration: BoxDecoration(
                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromARGB(255, 221, 220, 220),
-                                          blurRadius: 20.0,
-                                          spreadRadius: 0, //New
-                                        )
-                                      ],
+                        BoxShadow(
+                          color: Color.fromARGB(255, 221, 220, 220),
+                          blurRadius: 20.0,
+                          spreadRadius: 0, //New
+                        )
+                      ],
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(width: 1 ,color: Color(0xffF63E3E),
                     ),
@@ -305,46 +305,41 @@ class _Gameimg_monitors_pageState extends State<Gameimg_monitors_page> {
                                   ),
                                       ),
                                     ],
-                                   
-                                  ),
-                                  
-                                      ],
+                                  ), 
+                                  ],
                                     ),
                                   ),
                                   BottomNavigationBar(
-
-                selectedFontSize: 10,
-                // selectedIconTheme: IconThemeData(color: const Color.fromARGB(255, 255, 64, 198), size: 10),
-                selectedItemColor: Color(0xffF63E3E),
-                selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600,fontSize: 10),
-                items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined,color: Color(0xffF63E3E)),
-                label: 'Home',
-                  //  backgroundColor: Color(0xffFFFFFF)
-                ),
-                BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_outlined,color: Color(0xffF63E3E),),
-                label: 'Cart',
-                ),
-                BottomNavigationBarItem(
-                icon: Icon(Icons.post_add,color: Color(0xffF63E3E),),
-                label: 'My Orders',
-                ),
-                BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline,color: Color(0xffF63E3E ),),
-                label: 'Profile',
-                )
-                ],
-                currentIndex: _selectedIndex,
-                      // selectedItemColor:Color(0xffA456DD),
-                      onTap: _onItemTapped,
-                    ),
-
-                                 
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                  }
+                                        selectedFontSize: 10,
+                                        // selectedIconTheme: IconThemeData(color: const Color.fromARGB(255, 255, 64, 198), size: 10),
+                                        selectedItemColor: Color(0xffF63E3E),
+                                        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600,fontSize: 10),
+                                        items: <BottomNavigationBarItem>[
+                                        BottomNavigationBarItem(
+                                        icon: Icon(Icons.home_outlined,color: Color(0xffF63E3E)),
+                                        label: 'Home',
+                                          //  backgroundColor: Color(0xffFFFFFF)
+                                        ),
+                                        BottomNavigationBarItem(
+                                        icon: Icon(Icons.shopping_cart_outlined,color: Color(0xffF63E3E),),
+                                        label: 'Cart',
+                                        ),
+                                        BottomNavigationBarItem(
+                                        icon: Icon(Icons.post_add,color: Color(0xffF63E3E),),
+                                        label: 'My Orders',
+                                        ),
+                                        BottomNavigationBarItem(
+                                        icon: Icon(Icons.person_outline,color: Color(0xffF63E3E ),),
+                                        label: 'Profile',
+                                        )
+                                        ],
+                                        currentIndex: _selectedIndex,
+                                              // selectedItemColor:Color(0xffA456DD),
+                                              onTap: _onItemTapped,
+                                            ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
